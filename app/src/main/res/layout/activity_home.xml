@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_margin="@dimen/activity_vertical_margin"
+        android:layout_height="200dp">
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="80dp"
+            android:layout_height="200dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="80dp"
+                android:layout_height="50dp"
+                android:text="Hoje"
+                android:textSize="30dp"/>
+            <TextView
+                android:id="@+id/diaAtual"
+                android:layout_width="100dp"
+                android:layout_height="60dp"
+                android:textSize="50dp"
+                android:textColor="@android:color/holo_blue_light"/>
+            <TextView
+                android:id="@+id/mesAtual"
+                android:layout_width="100dp"
+                android:layout_height="50dp"
+                android:textSize="20dp"/>
+
+        </LinearLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="250dp"
+            android:layout_height="200dp"
+            android:layout_marginLeft="10dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:layout_marginLeft="10dp"
+                android:text="Próximo"
+                android:textSize="25dp"/>
+
+            <Button
+                android:layout_width="100dp"
+                android:layout_height="30dp"
+                android:layout_marginLeft="50dp"
+                android:background="@android:color/holo_blue_light"
+                android:text="Mais..." />
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:background="#EEE9E9"
+        android:divider="@android:color/darker_gray">
+        <ImageView
+            android:id="@+id/opMedicamentos"
+            android:layout_width="80dp"
+            android:layout_height="64dp"
+            android:src="@drawable/opcao_medicamentos"
+            />
+
+        <ImageView
+            android:id="@+id/opAgenda"
+            android:layout_width="80dp"
+            android:layout_height="64dp"
+            android:src="@drawable/opcao_agenda"/>
+
+        <ImageView
+            android:id="@+id/opHistorico"
+            android:layout_width="80dp"
+            android:layout_height="64dp"
+            android:src="@drawable/opcao_historico"/>
+
+        <ImageView
+            android:id="@+id/opAnalise"
+            android:layout_width="80dp"
+            android:layout_height="64dp"
+            android:src="@drawable/opcao_analise"/>
+    </LinearLayout>
+
+</LinearLayout>
+

@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:orientation="vertical"
+    tools:context="ifpi.edu.br.controlmed.NovoPacienteActivity"
+    android:weightSum="1">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Bem vindo paciente!\n"
+        android:textSize="27dp"
+        android:typeface="serif"
+        android:textColor="@android:color/secondary_text_light" />
+
+    <ImageView
+        android:layout_width="150dp"
+        android:layout_height="150dp"
+        android:src="@drawable/perfil"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="\n"/>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        >
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome:\n"
+            android:textSize="23dp"
+            android:typeface="serif"
+            android:textColor="@android:color/secondary_text_light"/>
+
+
+        <EditText
+            android:id="@+id/nomeDoPaciente"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:ems="8" />
+        <Button
+            android:id="@+id/bEnviarPaciente"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="ok"
+            android:textSize="15dp"
+            android:typeface="sans"
+            android:background="@android:color/holo_blue_light"
+            android:textColor="@android:color/background_light"
+            android:layout_gravity="center_horizontal"
+            android:onClick="enviarPaciente"/>
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
