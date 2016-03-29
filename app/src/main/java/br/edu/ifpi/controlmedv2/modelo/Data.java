@@ -12,9 +12,9 @@ public class Data {
     private int mes;
     private int ano;
 
-    public Data(int dia, int mes) {
-        this.dia = dia;
-        this.mes = mes;
+
+
+    public Data() {
     }
 
 

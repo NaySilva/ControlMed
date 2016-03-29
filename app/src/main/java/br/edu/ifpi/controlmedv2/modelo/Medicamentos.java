@@ -12,17 +12,26 @@ public class Medicamentos {
     private int id;
     private String nome;
     private int dose;
-    private UnidadeDeMedicamentoEnum Unidade;
-    private Data diaInicial;
-    private InstrucaoDeMedicamentoEnum instrucao;
-    private FrequenciaDeMedicamentoEnum frequencia;
+    private String unidade;
+    private String instrucao;
+    private String frequencia;
 
-    public Medicamentos(String nome){
+    public Medicamentos(String nome, int dose, String unidade, String instrucao, String frequencia) {
         this.nome = nome;
+        this.dose = dose;
+        this.unidade = unidade;
+        this.instrucao = instrucao;
+        this.frequencia = frequencia;
     }
 
-    public UnidadeDeMedicamentoEnum getUnidade() {
-        return Unidade;
+    @Override
+    public String toString() {
+        String str = nome;
+        return str;
+    }
+
+    public String getUnidade() {
+        return unidade;
     }
 
     public String getNome() {
@@ -45,32 +54,24 @@ public class Medicamentos {
         this.dose = dose;
     }
 
-    public Data getDiaInicial() {
-        return diaInicial;
-    }
-
-    public void setDiaInicial(Data diaInicial) {
-        this.diaInicial = diaInicial;
-    }
-
     public void setUnidade(UnidadeDeMedicamentoEnum unidade) {
-        Unidade = unidade;
+        unidade = unidade;
     }
 
 
-    public InstrucaoDeMedicamentoEnum getInstrucao() {
+    public String getInstrucao() {
         return instrucao;
     }
 
-    public void setInstrucao(InstrucaoDeMedicamentoEnum instrucao) {
+    public void setInstrucao(String instrucao) {
         this.instrucao = instrucao;
     }
 
-    public FrequenciaDeMedicamentoEnum getFrequencia() {
+    public String getFrequencia() {
         return frequencia;
     }
 
-    public void setFrequencia(FrequenciaDeMedicamentoEnum frequencia) {
+    public void setFrequencia(String frequencia) {
         this.frequencia = frequencia;
     }
 
@@ -78,3 +79,4 @@ public class Medicamentos {
         this.id = id;
     }
 }
+

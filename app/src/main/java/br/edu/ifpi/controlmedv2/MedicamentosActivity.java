@@ -16,15 +16,26 @@ import android.widget.ListView;
 
 import java.util.List;
 
+//import br.edu.ifpi.controlmedv2.dao.MedicamentoDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
+import br.edu.ifpi.controlmedv2.modelo.Medicamentos;
 import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
 public class MedicamentosActivity extends AppCompatActivity {
+
+    Paciente principal;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_medicamentos);
+    }
+
+    @Override
+    protected void onResume() {
+        recarregarDados();
+
+        super.onResume();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -37,35 +48,28 @@ public class MedicamentosActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.menu_add){
-            Intent irParaList = new Intent(this, ListPacienteActivity.class);
-            startActivity(irParaList);
+            Intent irParaNovoMedicamento = new Intent(this, NovoMedicamentoActivity.class);
+            startActivity(irParaNovoMedicamento);
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-//    private void recarregarDados() {
-//        final ListView listPacients = (ListView) findViewById(R.id.list_pacient);
-//        Medicamentos dao = new PacienteDAO(this);
-//        List<Paciente> pacientes = dao.lista();
-//        ArrayAdapter<Paciente> adapter = new ArrayAdapter<Paciente>(this, android.R.layout.simple_expandable_list_item_1, pacientes);
-//
-//        listPacients.setAdapter(adapter);
-//        listPacients.setChoiceMode(AbsListView.CHOICE_MODE_SINGLE);
-//        listPacients.setTextFilterEnabled(true);
-//        listPacients.setItemChecked(0, true);
-//
-//
-//
-//        listPacients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position,
-//                                    long id) {
-//                Paciente p = (Paciente)listPacients.getItemAtPosition(position);
-//                PacienteDAO dao = new PacienteDAO(ListPacienteActivity.this);
-//                dao.mudarPrincipal(p);
-//                recarregarDados();
-//            }
-//        });
-//    }
+    private void recarregarDados() {
+        PacienteDAO dao = new PacienteDAO(this);
+        principal = dao.verificarPrincipal();
+        final ListView listMedicametos = (ListView) findViewById(R.id.list_pacient);
+        //MedicamentoDAO dao = new MedicamentoDAO(this);
+        List<Medicamentos> medicamentos = dao.listaMedicamentos(principal);
+        ArrayAdapter<Medicamentos> adapter = new ArrayAdapter<Medicamentos>(this, android.R.layout.simple_expandable_list_item_1, medicamentos);
+        listMedicametos.setAdapter(adapter);
+
+        listMedicametos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position,
+                                    long id) {
+
+            }
+        });
+    }
 }

@@ -76,7 +76,7 @@ public class ListPacienteActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                Paciente p = (Paciente)listPacients.getItemAtPosition(position);
+                Paciente p = (Paciente) listPacients.getItemAtPosition(position);
                 PacienteDAO dao = new PacienteDAO(ListPacienteActivity.this);
                 dao.mudarPrincipal(p);
                 recarregarDados();
