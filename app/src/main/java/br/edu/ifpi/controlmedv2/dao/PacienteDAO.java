@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import java.security.Principal;
 import java.util.ArrayList;
@@ -37,11 +38,33 @@ public class PacienteDAO extends SQLiteOpenHelper{
                 "unidade TEXT," +
                 "instrucao TEXT," +
                 "frequencia TEXT," +
-                "id_paciente INTEGER," +
-                "FOREIGN KEY(id_paciente) REFERENCES Paciente(id)" +
+                "id_paciente INTEGER" +
                 ");";
         db.execSQL(sql);
-
+        sql = "CREATE TABLE Consulta(" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                "hospital TEXT," +
+                "motivo TEXT" +
+                ");";
+        db.execSQL(sql);
+        sql = "CREATE TABLE Exame(" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                "nome TEXT," +
+                "motivo TEXT," +
+                "tipo_de_resultado TEXT," +
+                "taxa REAL" +
+                ");";
+        db.execSQL(sql);
+        sql = "CREATE TABLE Agenda(" +
+                "id INTEGER NOT NULL PRIMARY KEY AUTOINCREMENT," +
+                "tipo INTEGER," +
+                "data TEXT," +
+                "horario TEXT," +
+                "realizado INTEGER," +
+                "id_compromisso INTEGER," +
+                "id_paciente INTEGER" +
+                ");";
+        db.execSQL(sql);
     }
 
     @Override
@@ -64,45 +87,27 @@ public class PacienteDAO extends SQLiteOpenHelper{
         getWritableDatabase().insert("Paciente", null, cv);
 
     }
-    public void inserirMedicamentos(Medicamentos medicamento, Paciente paciente){
-        ContentValues cv = new ContentValues();
-        cv.put("nome", medicamento.getNome());
-        cv.put("dose", medicamento.getDose());
-        cv.put("unidade", medicamento.getUnidade());
-        cv.put("instrucao", medicamento.getInstrucao());
-        cv.put("frequencia", medicamento.getFrequencia());
-        cv.put("id_paciente", paciente.getId());
-        paciente.addMedicamento(medicamento);
-
-        getWritableDatabase().insert("Medicamento", null, cv);
-
-    }
+//    public void inserirMedicamentos(Medicamentos medicamento, Paciente paciente){
+//        ContentValues cv = new ContentValues();
+//        cv.put("nome", medicamento.getNome());
+//        cv.put("dose", medicamento.getDose());
+//        cv.put("unidade", medicamento.getUnidade());
+//        cv.put("instrucao", medicamento.getInstrucao());
+//        cv.put("frequencia", medicamento.getFrequencia());
+//        cv.put("id_paciente", paciente.getId());
+//        paciente.addMedicamento(medicamento);
+//
+//        getWritableDatabase().insert("Medicamento", null, cv);
+//
+//    }
 
     public void mudarPrincipal(Paciente paciente){
-        Paciente p = verificarPrincipal();
-        String sql = "SELECT * FROM Paciente WHERE id = "+p.getId()+";";
-        Cursor c = getReadableDatabase().rawQuery(sql,null);
-        c.moveToFirst();
-        int id = c.getInt(c.getColumnIndex("id"));
-        String nome = c.getString(c.getColumnIndex("nome"));
-        boolean principal = false;
-        Paciente pac = new Paciente(nome);
-        pac.setId(id);
-        pac.setPrincipal(principal);
-        remover(p);
-        inserir(pac);
+        Paciente principal = verificarPrincipal();
+        String sql = "UPDATE Paciente SET principal = 0 WHERE id = " + principal.getId() + ";";
+        getWritableDatabase().execSQL(sql);
+        sql = "UPDATE Paciente SET principal = 1 WHERE id = " + paciente.getId() + ";";
+        getWritableDatabase().execSQL(sql);
 
-        sql = "SELECT * FROM Paciente WHERE id = "+paciente.getId()+";";
-        c = getReadableDatabase().rawQuery(sql,null);
-        c.moveToFirst();
-        id = c.getInt(c.getColumnIndex("id"));
-        nome = c.getString(c.getColumnIndex("nome"));
-        principal = true;
-        pac = new Paciente(nome);
-        pac.setId(id);
-        pac.setPrincipal(principal);
-        remover(paciente);
-        inserir(pac);
     }
 
     public Paciente verificarPrincipal(){
@@ -140,33 +145,33 @@ public class PacienteDAO extends SQLiteOpenHelper{
         }
         return pacientes;
     }
-    public List<Medicamentos> listaMedicamentos(Paciente p){
-        List<Medicamentos> medicamentos = new ArrayList<>();
-        String sql = "SELECT * FROM Medicamento WHERE id_paciente = " + p.getId() + ";";
-        Cursor c = getReadableDatabase().rawQuery(sql,null);
-
-        while (c.moveToNext()){
-            int id = c.getInt(c.getColumnIndex("id"));
-            String nome = c.getString(c.getColumnIndex("nome"));
-            int dose = c.getInt(c.getColumnIndex("dose"));
-            String unidade = c.getString(c.getColumnIndex("unidade"));
-            String instrucao = c.getString(c.getColumnIndex("instrucao"));
-            String frequencia = c.getString(c.getColumnIndex("frequencia"));
-            Medicamentos m = new Medicamentos(nome, dose, unidade, instrucao, frequencia);
-            m.setId(id);
-            p.addMedicamento(m);
-            medicamentos.add(m);
-        }
-        return medicamentos;
-    }
+//    public List<Medicamentos> listaMedicamentos(Paciente p){
+//        List<Medicamentos> medicamentos = new ArrayList<>();
+//        String sql = "SELECT * FROM Medicamento;";
+//        Cursor c = getReadableDatabase().rawQuery(sql,null);
+//
+//        while (c.moveToNext()){
+//            int id = c.getInt(c.getColumnIndex("id"));
+//            String nome = c.getString(c.getColumnIndex("nome"));
+//            int dose = c.getInt(c.getColumnIndex("dose"));
+//            String unidade = c.getString(c.getColumnIndex("unidade"));
+//            String instrucao = c.getString(c.getColumnIndex("instrucao"));
+//            String frequencia = c.getString(c.getColumnIndex("frequencia"));
+//            Medicamentos m = new Medicamentos(nome, dose, unidade, instrucao, frequencia);
+//            m.setId(id);
+//            p.addMedicamento(m);
+//            medicamentos.add(m);
+//        }
+//        return medicamentos;
+//    }
 
 
     public void remover(Paciente paciente) {
-        String[] args = {String.valueOf(paciente.getId())};
-        getWritableDatabase().delete("Paciente", "id = ?", args);
+        String sql = "DELETE FROM Paciente WHERE id = " + paciente.getId() + ";";
+        getWritableDatabase().execSQL(sql);
     }
-    public void removerMedicamentos(Medicamentos medicamento) {
-        String[] args = {String.valueOf(medicamento.getId())};
-        getWritableDatabase().delete("Medicamento", "id = ?", args);
-    }
+//    public void removerMedicamentos(Medicamentos medicamento) {
+//        String[] args = {String.valueOf(medicamento.getId())};
+//        getWritableDatabase().delete("Medicamento", "id = ?", args);
+//    }
 }

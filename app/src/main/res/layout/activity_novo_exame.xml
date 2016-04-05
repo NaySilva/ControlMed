@@ -8,7 +8,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="br.edu.ifpi.controlmedv2.NovoMedicamentoActivity">
+    tools:context="br.edu.ifpi.controlmedv2.NovoExameActivity">
 
     <!-- Login progress -->
     <ProgressBar
@@ -29,21 +29,20 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Medicamento:"/>
+                android:text="Nome:"/>
 
             <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <AutoCompleteTextView
-                    android:id="@+id/nomeDoMedicamento"
+                    android:id="@+id/nomeDoExame"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:inputType="textEmailAddress"
+                    android:inputType="textAutoComplete"
                     android:maxLines="1"
                     android:singleLine="true" />
 
@@ -52,82 +51,72 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Dose:"/>
+                android:text="Motivo:"/>
 
-            <LinearLayout
+            <android.support.design.widget.TextInputLayout
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_height="wrap_content">
 
                 <EditText
-                    android:id="@+id/dose"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:inputType="number"
-                    android:maxEms="4"
-                    android:ems="4"/>
-                <Spinner
-                    android:id="@+id/unidades"
+                    android:id="@+id/motivoDoExame"
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_weight="1"
-                    android:entries="@array/unidades"></Spinner>
+                    android:layout_height="wrap_content"
+                    android:imeActionId="@+id/login"
+                    android:imeActionLabel="@string/action_sign_in_short"
+                    android:imeOptions="actionUnspecified"
+                    android:inputType="text"
+                    android:maxLines="1"
+                    android:singleLine="true" />
 
-            </LinearLayout>
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Instrução:"/>
-
-            <Spinner
-                android:id="@+id/instrucoes"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/instrucoes"></Spinner>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Frequencia:"/>
-
-            <Spinner
-                android:id="@+id/frequencias"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:entries="@array/frequencias"></Spinner>
-
+            </android.support.design.widget.TextInputLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal">
 
-                <Button
-                    android:id="@+id/bData"
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Tipo De Resultado: "/>
+
+                <Spinner
+                    android:id="@+id/tipoDeExame"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:hint="Dia"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/holo_blue_light"/>
-                <Button
-                    android:id="@+id/bHora"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:hint="Hora"
-                    android:background="@android:color/white"
-                    android:textColor="@android:color/holo_blue_light"/>
+                    android:entries="@array/tipoDeResultado"></Spinner>
             </LinearLayout>
+            <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
             <Button
-                android:id="@+id/bEnviarMedicamento"
+                android:id="@+id/bData"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Dia"
+                android:background="@android:color/white"
+                android:textColor="@android:color/holo_blue_light"/>
+            <Button
+                android:id="@+id/bHora"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:hint="Hora"
+                android:background="@android:color/white"
+                android:textColor="@android:color/holo_blue_light"/>
+        </LinearLayout>
+
+            <Button
+                android:id="@+id/bEnviarExame"
                 style="?android:textAppearanceSmall"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@android:color/holo_blue_light"
                 android:text="Salvar"
+                android:background="@android:color/holo_blue_light"
                 android:textColor="@android:color/white"
                 android:textStyle="bold" />
 

@@ -5,22 +5,30 @@ import android.app.AlertDialog;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Text;
+
+import br.edu.ifpi.controlmedv2.Controle.Agenda;
+import br.edu.ifpi.controlmedv2.dao.AgendaDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
 import br.edu.ifpi.controlmedv2.modelo.Data;
+import br.edu.ifpi.controlmedv2.modelo.Horario;
 import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
 public class HomeActivity extends AppCompatActivity {
 
     Paciente p;
+    PacienteDAO dao = new PacienteDAO(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +46,23 @@ public class HomeActivity extends AppCompatActivity {
 
         distribuirFuncoes();
 
+    }
+
+    private void proximoCompromisso(){
+
+        TextView textHora = (TextView) findViewById(R.id.proximaHora);
+        TextView textTipo = (TextView) findViewById(R.id.proximaTipo);
+        try {
+            Data d = new Data();
+            d.dataAtual();
+            AgendaDAO daoA = new AgendaDAO(dao);
+            Agenda compromisso = daoA.proximoDeHoje(p, d);
+            textHora.setText(compromisso.getHora());
+
+            textTipo.setText(compromisso.getTipo().toString());
+        }catch (RuntimeException e){
+            textTipo.setText("Não há compromissos para hoje!");
+        }
     }
 
     private void distribuirFuncoes(){
@@ -103,12 +128,32 @@ public class HomeActivity extends AppCompatActivity {
         super.onResume();
         PacienteDAO dao = new PacienteDAO(this);
         p = dao.verificarPrincipal();
+        acaoInicial();
+        proximoCompromisso();
+    }
+
+    private void acaoInicial(){
         if (p == null){
-            Intent irParaNovoPaciente = new Intent(this, NovoPacienteActivity.class);
-            startActivity(irParaNovoPaciente);
+            AlertDialog.Builder dialog = new AlertDialog.Builder(HomeActivity.this);
+            dialog.setTitle("Bem Vindo Paciente");
+            dialog.setCancelable(true);
+            LayoutInflater inflater = LayoutInflater.from(HomeActivity.this);
+            final View dialogView = inflater.inflate(R.layout.activity_novo_paciente, null);
+            final EditText edNome = (EditText) dialogView.findViewById(R.id.nomeDoPaciente);
+            dialog.setView(dialogView);
+            dialog.setPositiveButton(getString(R.string.opcao_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    Paciente p = new Paciente(edNome.getText().toString());
+                    dao.inserir(p);
+                    setTitle("Olá " + p.getNome());
+                }
+            });
+            dialog.show();;
+
         }else{
-            Toast.makeText(HomeActivity.this, "Ola " + p.getNome(), Toast.LENGTH_SHORT).show();
-        }
+            setTitle("Olá " + p.getNome());}
+
     }
 
     @Override

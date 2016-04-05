@@ -22,18 +22,14 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.ContactsContract;
-import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.TimePicker;
 
 import java.util.ArrayList;
@@ -43,10 +39,10 @@ import java.util.List;
 import br.edu.ifpi.controlmedv2.Controle.Agenda;
 import br.edu.ifpi.controlmedv2.dao.AgendaDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
+import br.edu.ifpi.controlmedv2.modelo.Consulta;
 import br.edu.ifpi.controlmedv2.modelo.Data;
 import br.edu.ifpi.controlmedv2.modelo.Exame;
 import br.edu.ifpi.controlmedv2.modelo.Horario;
-import br.edu.ifpi.controlmedv2.modelo.Medicamentos;
 import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
 import static android.Manifest.permission.READ_CONTACTS;
@@ -54,7 +50,7 @@ import static android.Manifest.permission.READ_CONTACTS;
 /**
  * A login screen that offers login via email/password.
  */
-public class NovoMedicamentoActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
+public class NovoExameActivity extends AppCompatActivity implements LoaderCallbacks<Cursor> {
 
     /**
      * Id to identity READ_CONTACTS permission request.
@@ -74,35 +70,30 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
     private UserLoginTask mAuthTask = null;
 
     // UI references.
-    private AutoCompleteTextView edMedicamento;
-    private EditText edDose;
-    private Spinner spUnidade;
-    private Spinner spFrequencia;
-    private Spinner spIntrucao;
+    private AutoCompleteTextView exameView;
+    private EditText motivoView;
+    private Spinner spTipoDeResultado;
     private Button dataButton;
     private Button horaButton;
-
     private Paciente principal;
-    private PacienteDAO dao = new PacienteDAO(this);
     private View mProgressView;
     private View mLoginFormView;
+    private PacienteDAO dao = new PacienteDAO(this);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_novo_medicamento);
+        setContentView(R.layout.activity_novo_exame);
         // Set up the login form.
+
         principal = dao.verificarPrincipal();
-        edMedicamento = (AutoCompleteTextView) findViewById(R.id.nomeDoMedicamento);
-        populateAutoComplete();
+        exameView = (AutoCompleteTextView) findViewById(R.id.nomeDoExame);
+        //populateAutoComplete();
 
-        edDose = (EditText) findViewById(R.id.dose);
+        motivoView = (EditText) findViewById(R.id.motivoDoExame);
 
-        spUnidade = (Spinner) findViewById(R.id.unidades);
+        spTipoDeResultado = (Spinner)findViewById(R.id.tipoDeExame);
 
-        spFrequencia = (Spinner) findViewById(R.id.frequencias);
-
-        spIntrucao = (Spinner) findViewById(R.id.instrucoes);
 
         dataButton = (Button) findViewById(R.id.bData);
         final Calendar calendar = Calendar.getInstance();
@@ -111,7 +102,7 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
         dataButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                new DatePickerDialog(NovoMedicamentoActivity.this, new DatePickerDialog.OnDateSetListener() {
+                new DatePickerDialog(NovoExameActivity.this, new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                         Data d = new Data();
@@ -131,7 +122,7 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
         horaButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                new TimePickerDialog(NovoMedicamentoActivity.this,
+                new TimePickerDialog(NovoExameActivity.this,
                         new TimePickerDialog.OnTimeSetListener() {
                             @Override
                             public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
@@ -145,14 +136,16 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
             }
         });
 
-        Button novaConsultaButton = (Button) findViewById(R.id.bEnviarMedicamento);
-        novaConsultaButton.setOnClickListener(new OnClickListener() {
+        Button novoExameButton = (Button) findViewById(R.id.bEnviarExame);
+        novoExameButton.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                enviarMedicamento();
+                enviarExame();
             }
         });
 
+        //mLoginFormView = findViewById(R.id.login_form);
+        // mProgressView = findViewById(R.id.login_progress);
     }
 
     private void populateAutoComplete() {
@@ -171,7 +164,7 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
             return true;
         }
         if (shouldShowRequestPermissionRationale(READ_CONTACTS)) {
-            Snackbar.make(edMedicamento, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
+            Snackbar.make(exameView, R.string.permission_rationale, Snackbar.LENGTH_INDEFINITE)
                     .setAction(android.R.string.ok, new View.OnClickListener() {
                         @Override
                         @TargetApi(Build.VERSION_CODES.M)
@@ -204,26 +197,24 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
      * If there are form errors (invalid email, missing fields, etc.), the
      * errors are presented and no actual login attempt is made.
      */
-    private void enviarMedicamento() {
+    private void enviarExame() {
         AgendaDAO daoA = new AgendaDAO(dao);
 
-        String nome = edMedicamento.getText().toString();
-        int dose = Integer.valueOf(edDose.getText().toString());
-        String unidade = spUnidade.getSelectedItem().toString();
-        String frequencia = spFrequencia.getSelectedItem().toString();
-        String instrucao = spIntrucao.getSelectedItem().toString();
+        String nome = exameView.getText().toString();
+        String motivo = motivoView.getText().toString();
+        String tipo = spTipoDeResultado.getSelectedItem().toString();
 
-        Medicamentos med = new Medicamentos(nome, dose, unidade, frequencia, instrucao);
+        Exame exame = new Exame(nome, motivo, tipo);
 
         String data = dataButton.getText().toString();
         String hora = horaButton.getText().toString();
 
         Agenda agenda = new Agenda(data, hora);
 
-        daoA.inserirMedicamenotos(agenda, principal, med);
+        daoA.inserirExame(agenda, principal, exame);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Medicamento adicionado!");
+        builder.setMessage("Exame adicionado!");
         builder.setPositiveButton("Ok obg!", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
@@ -232,6 +223,50 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
         });
 
         builder.show();
+//        if (mAuthTask != null) {
+//            return;
+//        }
+//
+//        // Reset errors.
+//        hospitalView.setError(null);
+//        motivoView.setError(null);
+//
+//        // Store values at the time of the login attempt.
+//        String email = hospitalView.getText().toString();
+//        String password = motivoView.getText().toString();
+//
+//        boolean cancel = false;
+//        View focusView = null;
+//
+//        // Check for a valid password, if the user entered one.
+//        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+//            motivoView.setError(getString(R.string.error_invalid_password));
+//            focusView = motivoView;
+//            cancel = true;
+//        }
+//
+//        // Check for a valid email address.
+//        if (TextUtils.isEmpty(email)) {
+//            hospitalView.setError(getString(R.string.error_field_required));
+//            focusView = hospitalView;
+//            cancel = true;
+//        } else if (!isEmailValid(email)) {
+//            hospitalView.setError(getString(R.string.error_invalid_email));
+//            focusView = hospitalView;
+//            cancel = true;
+//        }
+//
+//        if (cancel) {
+//            // There was an error; don't attempt login and focus the first
+//            // form field with an error.
+//            focusView.requestFocus();
+//        } else {
+//            // Show a progress spinner, and kick off a background task to
+//            // perform the user login attempt.
+//            showProgress(true);
+//            mAuthTask = new UserLoginTask(email, password);
+//            mAuthTask.execute((Void) null);
+//        }
     }
 
     private boolean isEmailValid(String email) {
@@ -317,10 +352,10 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
     private void addEmailsToAutoComplete(List<String> emailAddressCollection) {
         //Create adapter to tell the AutoCompleteTextView what to show in its dropdown list.
         ArrayAdapter<String> adapter =
-                new ArrayAdapter<>(NovoMedicamentoActivity.this,
+                new ArrayAdapter<>(NovoExameActivity.this,
                         android.R.layout.simple_dropdown_item_1line, emailAddressCollection);
 
-        edMedicamento.setAdapter(adapter);
+        exameView.setAdapter(adapter);
     }
 
 
@@ -379,8 +414,8 @@ public class NovoMedicamentoActivity extends AppCompatActivity implements Loader
             if (success) {
                 finish();
             } else {
-                edDose.setError(getString(R.string.error_incorrect_password));
-                edDose.requestFocus();
+                motivoView.setError(getString(R.string.error_incorrect_password));
+                motivoView.requestFocus();
             }
         }
 

@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AbsListView;
@@ -14,6 +15,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckedTextView;
+import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
@@ -26,7 +28,7 @@ import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
 public class ListPacienteActivity extends AppCompatActivity {
 
-    Paciente principal;
+    Paciente p;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,12 +38,19 @@ public class ListPacienteActivity extends AppCompatActivity {
 
         ListView listPacients = (ListView) findViewById(R.id.list_pacient);
         registerForContextMenu(listPacients);
-        listPacients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        listPacients.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                principal = (Paciente) parent.getItemAtPosition(position);
+            public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+                p = (Paciente) parent.getItemAtPosition(position);
+                return false;
             }
         });
+//        listPacients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+//            @Override
+//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+//                p = (Paciente) parent.getItemAtPosition(position);
+//            }
+//        });
         Button button = (Button) findViewById(R.id.bNovoPaciente);
         registerForContextMenu(button);
         button.setOnClickListener(new View.OnClickListener() {
@@ -70,24 +79,36 @@ public class ListPacienteActivity extends AppCompatActivity {
         listPacients.setTextFilterEnabled(true);
         listPacients.setItemChecked(0, true);
 
-
-
         listPacients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
-                Paciente p = (Paciente) listPacients.getItemAtPosition(position);
+                Paciente principal = (Paciente) listPacients.getItemAtPosition(position);
                 PacienteDAO dao = new PacienteDAO(ListPacienteActivity.this);
-                dao.mudarPrincipal(p);
+                dao.mudarPrincipal(principal);
                 recarregarDados();
             }
         });
     }
 
     private void novoPaciente(View v) {
-
-        Intent irParaNovoPaciente = new Intent(this, NovoPacienteActivity.class);
-        startActivity(irParaNovoPaciente);
+        AlertDialog.Builder dialog = new AlertDialog.Builder(ListPacienteActivity.this);
+        dialog.setTitle("Bem Vindo Paciente");
+        dialog.setCancelable(true);
+        LayoutInflater inflater = LayoutInflater.from(ListPacienteActivity.this);
+        final View dialogView = inflater.inflate(R.layout.activity_novo_paciente, null);
+        final EditText edNome = (EditText) dialogView.findViewById(R.id.nomeDoPaciente);
+        dialog.setView(dialogView);
+        dialog.setPositiveButton(getString(R.string.opcao_ok), new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                PacienteDAO dao = new PacienteDAO(ListPacienteActivity.this);
+                Paciente p = new Paciente(edNome.getText().toString());
+                dao.inserir(p);
+                recarregarDados();
+            }
+        });
+        dialog.show();
 
     }
 
@@ -96,20 +117,7 @@ public class ListPacienteActivity extends AppCompatActivity {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         if (v.getId() == R.id.list_pacient) {
-            MenuItem mod = menu.add("Deixar como principal");
             MenuItem deletar = menu.add("Deletar");
-
-            mod.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-                @Override
-                public boolean onMenuItemClick(MenuItem item) {
-                    PacienteDAO dao = new PacienteDAO(ListPacienteActivity.this);
-                    Paciente p = dao.verificarPrincipal();
-                    p.setPrincipal(false);
-                    principal.setPrincipal(true);
-                    return false;
-                }
-            });
-
 
             deletar.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
                 @Override
@@ -121,9 +129,9 @@ public class ListPacienteActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PacienteDAO dao = new PacienteDAO(ListPacienteActivity.this);
-                            dao.remover(principal);
-                            onResume();
+                            dao.remover(p);
                             Toast.makeText(ListPacienteActivity.this, "Paciente removido", Toast.LENGTH_SHORT).show();
+                            onResume();
                         }
                     });
                     b.setNegativeButton("NÃO", null);

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".AgendaActivity">
+
+    <item android:id="@+id/menu_add_compromisso"
+        android:title="Novo Compromisso"
+        android:icon="@drawable/add"
+        app:showAsAction="always">
+        <menu>
+            <item android:id="@+id/add_consulta"
+                android:title="Consulta"></item>
+            <item android:id="@+id/add_exame"
+                android:title="Exame"></item>
+            <item android:id="@+id/add_medicamento"
+                android:title="Medicamento"></item>
+        </menu>
+    </item>
+
+
+</menu>

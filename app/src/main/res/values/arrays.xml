@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="unidades">
+        <item>Ampolas</item>
+        <item>Capsulas</item>
+        <item>Copos</item>
+        <item>Gotas</item>
+        <item>Gramas</item>
+        <item>Injeções</item>
+        <item>Pilulas</item>
+        <item>Miligrama</item>
+        <item>Outros</item>
+    </string-array>
+    <string-array name="frequencias">
+        <item>Evento unico</item>
+        <item>Diariamente</item>
+        <item>Cada x dias</item>
+        <item>Semanalmente</item>
+        <item>Mensalmente</item>
+        <item>Cada x horas</item>
+        <item>Quando precisar</item>
+    </string-array>
+    <string-array name="instrucoes">
+        <item>Sem Instrução</item>
+        <item>Antes de alimento</item>
+        <item>Com comida</item>
+        <item>Depois da comida</item>
+    </string-array>
+    <string-array name="mostraNaAgenda">
+        <item>Tudo</item>
+        <item>Consulta</item>
+        <item>Agenda</item>
+    </string-array>
+    <string-array name="tipoDeResultado">
+        <item>Taxa</item>
+        <item>Positivo/Negativo</item>
+        <item>Outro</item>
+    </string-array>
+</resources>

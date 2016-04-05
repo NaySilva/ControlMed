@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".NovoMedicamento2Activity">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nome:"
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/nomeDoMedicamento"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Dose:"
+            android:textSize="20dp"/>
+        <EditText
+            android:id="@+id/dose"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="number"/>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Unidade:"
+            android:textSize="20dp"/>
+        <Spinner
+            android:id="@+id/unidades"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/unidades"></Spinner>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Instrução:"
+            android:textSize="20dp"/>
+        <Spinner
+            android:id="@+id/instrucoes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/instrucoes"></Spinner>
+
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Frequencia:"
+            android:textSize="20dp"/>
+        <Spinner
+            android:id="@+id/frequencias"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:entries="@array/frequencias"></Spinner>
+
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/bEnviarMedicamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:text="Salvar"
+        android:background="@android:color/holo_blue_light"
+        android:textColor="@android:color/white"/>
+
+</LinearLayout>
