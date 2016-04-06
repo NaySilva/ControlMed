@@ -11,14 +11,13 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import org.w3c.dom.Text;
-
-import br.edu.ifpi.controlmedv2.Controle.Agenda;
+import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
+import br.edu.ifpi.controlmedv2.modelo.Agenda;
 import br.edu.ifpi.controlmedv2.dao.AgendaDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
 import br.edu.ifpi.controlmedv2.modelo.Data;
@@ -52,31 +51,33 @@ public class HomeActivity extends AppCompatActivity {
 
         TextView textHora = (TextView) findViewById(R.id.proximaHora);
         TextView textTipo = (TextView) findViewById(R.id.proximaTipo);
+        final Button detalhes = (Button) findViewById(R.id.bDetalhes);
         try {
             Data d = new Data();
             d.dataAtual();
-            AgendaDAO daoA = new AgendaDAO(dao);
-            Agenda compromisso = daoA.proximoDeHoje(p, d);
+            Horario h = new Horario();
+            h.horaAtual();
+            final AgendaDAO daoA = new AgendaDAO(dao);
+            final Agenda compromisso = daoA.proximoDeHoje(p, d, h);
+            detalhes.setVisibility(View.VISIBLE);
             textHora.setText(compromisso.getHora());
-
             textTipo.setText(compromisso.getTipo().toString());
+
+            detalhes.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    clickDetalhes(compromisso, daoA);
+                }
+            });
         }catch (RuntimeException e){
+
+            textHora.setText("");
             textTipo.setText("Não há compromissos para hoje!");
+            detalhes.setVisibility(View.INVISIBLE);
         }
     }
 
     private void distribuirFuncoes(){
-        ImageView imMed = (ImageView)findViewById(R.id.opMedicamentos);
-        registerForContextMenu(imMed);
-
-        imMed.setOnClickListener(new AdapterView.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                Intent irParaMedicamentos = new Intent(HomeActivity.this, MedicamentosActivity.class);
-                startActivity(irParaMedicamentos);
-            }
-        });
 
         ImageView imAgenda = (ImageView)findViewById(R.id.opAgenda);
         registerForContextMenu(imAgenda);
@@ -102,18 +103,26 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        ImageView imAnalise = (ImageView)findViewById(R.id.opAnalise);
-        registerForContextMenu(imAnalise);
+    }
 
-        imAnalise.setOnClickListener(new AdapterView.OnClickListener() {
-
+    private void clickDetalhes(Agenda ag, AgendaDAO daoA){
+        AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
+        String str;
+        if(ag.getTipo() == TipoDeCompromissoEnum.CONSULTA) {
+            str = daoA.buscarConsulta(ag.getIdCompromisso()).toString();
+        }else if (ag.getTipo() == TipoDeCompromissoEnum.EXAME){
+            str = daoA.buscarExame(ag.getIdCompromisso()).toString();
+        }else{
+            str = daoA.buscarMedicamentos(ag.getIdCompromisso()).toString();
+        }
+        builder.setMessage(str);
+        builder.setPositiveButton("Voltar!", new DialogInterface.OnClickListener() {
             @Override
-            public void onClick(View v) {
-                Intent irParaAnalise = new Intent(HomeActivity.this, AnaliseActivity.class);
-                startActivity(irParaAnalise);
+            public void onClick(DialogInterface dialog, int which) {
             }
         });
 
+        builder.show();
     }
 
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -165,7 +174,7 @@ public class HomeActivity extends AppCompatActivity {
             startActivity(irParaList);
         }else if(item.getItemId() == R.id.menu_sobre){
             AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            String str = "Este aplicativo foi desenvolvido por uma aluna do IFPI - Teresina Central do curso ADS, orientada pelo Professor, com meta de tirar pelo menos um 10.0";
+            String str = "Este aplicativo foi desenvolvido por uma aluna do IFPI - Teresina Central do curso ADS, orientada pelo Professor";
             builder.setMessage(str);
             builder.setPositiveButton("Voltar!", new DialogInterface.OnClickListener() {
                 @Override

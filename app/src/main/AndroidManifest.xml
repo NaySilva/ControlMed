@@ -22,10 +22,8 @@
         </activity>
         <activity android:name=".NovoPacienteActivity" />
         <activity android:name=".ListPacienteActivity" />
-        <activity android:name=".MedicamentosActivity" />
         <activity android:name=".AgendaActivity" />
         <activity android:name=".HistoricoActivity" />
-        <activity android:name=".AnaliseActivity" />
         <!--
              ATTENTION: This was auto-generated to add Google Play services to your project for
              App Indexing.  See https://g.co/AppIndexing/AndroidStudio for more information.
@@ -34,16 +32,15 @@
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
 
-        <activity android:name=".NovoMedicamento2Activity" />
+        <activity
+            android:name=".NovoMedicamentoActivity"
+            android:label="Adicionar Medicamento"/>
         <activity
             android:name=".NovaConsultaActivity"
             android:label="@string/title_activity_nova_consulta" />
         <activity
             android:name=".NovoExameActivity"
             android:label="@string/title_activity_novo_exame" />
-        <activity
-            android:name=".NovoMedicamentoActivity"
-            android:label="@string/title_activity_novo_medicamento"></activity>
     </application>
 
 </manifest>

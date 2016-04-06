@@ -1,13 +1,9 @@
 package br.edu.ifpi.controlmedv2.modelo;
 
-import br.edu.ifpi.controlmedv2.enums.FrequenciaDeMedicamentoEnum;
-import br.edu.ifpi.controlmedv2.enums.InstrucaoDeMedicamentoEnum;
-import br.edu.ifpi.controlmedv2.enums.UnidadeDeMedicamentoEnum;
-
 /**
  * Created by Eva on 24/03/2016.
  */
-public class Medicamentos {
+public class Medicamentos extends Agenda{
 
     private int id;
     private String nome;
@@ -26,8 +22,17 @@ public class Medicamentos {
 
     @Override
     public String toString() {
-        String str = nome;
+        String str = "";
+        str += "\nNome: " + nome +
+                "\nDose: " + dose +
+                "\nUnidade: " + unidade +
+                "\nFrequencia: " + frequencia +
+                "\nInstrução: " + instrucao;
         return str;
+    }
+
+    public String text2(){
+        return "Nome: " + this.nome;
     }
 
     public String getUnidade() {
@@ -54,7 +59,7 @@ public class Medicamentos {
         this.dose = dose;
     }
 
-    public void setUnidade(UnidadeDeMedicamentoEnum unidade) {
+    public void setUnidade(String unidade) {
         unidade = unidade;
     }
 

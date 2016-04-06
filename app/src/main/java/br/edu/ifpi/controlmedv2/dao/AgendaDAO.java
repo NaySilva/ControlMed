@@ -6,11 +6,12 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.edu.ifpi.controlmedv2.Controle.Agenda;
+import br.edu.ifpi.controlmedv2.modelo.Agenda;
 import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
 import br.edu.ifpi.controlmedv2.modelo.Consulta;
 import br.edu.ifpi.controlmedv2.modelo.Data;
 import br.edu.ifpi.controlmedv2.modelo.Exame;
+import br.edu.ifpi.controlmedv2.modelo.Horario;
 import br.edu.ifpi.controlmedv2.modelo.Medicamentos;
 import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
@@ -80,7 +81,7 @@ public class AgendaDAO {
 
     }
 
-    public void inserirMedicamenotos(Agenda agenda, Paciente paciente, Medicamentos medicamento){
+    public void inserirMedicamentos(Agenda agenda, Paciente paciente, Medicamentos medicamento){
         ContentValues cv1 = new ContentValues();
         cv1.put("nome", medicamento.getNome());
         cv1.put("dose", medicamento.getDose());
@@ -112,7 +113,7 @@ public class AgendaDAO {
 
     public List<Agenda> lista(Paciente p, String data){
         List<Agenda> compromissos = new ArrayList<>();
-        String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " AND data = '"+ data + "';";
+        String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " AND data = '"+ data + "' ORDER BY horario ASC;";
         Cursor c = dao.getReadableDatabase().rawQuery(sql,null);
 
         while (c.moveToNext()){
@@ -121,26 +122,62 @@ public class AgendaDAO {
             String hora = c.getString(c.getColumnIndex("horario"));
             String date = c.getString(c.getColumnIndex("data"));
             int id_compromisso = c.getInt(c.getColumnIndex("id_compromisso"));
+            int realizado = c.getInt(c.getColumnIndex("realizado"));
             Agenda ag = new Agenda(date, hora);
             ag.setTipo(TipoDeCompromissoEnum.fromInteger(tipo));
             ag.setId(id);
             ag.setIdCompromisso(id_compromisso);
+            if(realizado == 1){
+                ag.setRealizada(true);
+            }
             compromissos.add(ag);
+            p.addCompromisso(ag);
         }
         return compromissos;
     }
 
-    public Agenda proximoDeHoje(Paciente p, Data data){
+    public List<Agenda> historico(Paciente p){
+        List<Agenda> todosCompromissos = new ArrayList<>();
+        String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " ORDER BY data ASC;";
+        Cursor c = dao.getReadableDatabase().rawQuery(sql,null);
+        while (c.moveToNext()){
+            String date = c.getString(c.getColumnIndex("data"));
+            List<Agenda> compromissos =  lista(p, date);
+            for (Agenda item: compromissos){
+                todosCompromissos.add(item);
+            }
+        }
+        return todosCompromissos;
+    }
+
+    public void mudarRealizado(Agenda agenda){
+        agenda.setRealizada(!agenda.isRealizada());
+        String sql;
+        if (agenda.isRealizada()){
+            sql = "UPDATE Agenda SET realizado = 1 WHERE id = " + agenda.getId() + ";";
+        }else{
+            sql = "UPDATE Agenda SET realizado = 0 WHERE id = " + agenda.getId() + ";";
+        }
+        dao.getWritableDatabase().execSQL(sql);
+
+    }
+    public Agenda proximoDeHoje(Paciente p, Data data, Horario h){
         Agenda proximo;
-        String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " AND data = '"+ data.toString() + "' ORDER BY horario ASC;";
+        String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " AND data = '"+ data.toString() + "' AND horario > '" + h.toString() + "' AND realizado = 0 ORDER BY horario ASC;";
         Cursor c = dao.getReadableDatabase().rawQuery(sql,null);
         try{
             c.moveToFirst();
             int tipo = c.getInt(c.getColumnIndex("tipo"));
             String hora = c.getString(c.getColumnIndex("horario"));
             String date = c.getString(c.getColumnIndex("data"));
+            int idCompromisso = c.getInt(c.getColumnIndex("id_compromisso"));
+            int realizado = c.getInt(c.getColumnIndex("realizado"));
             proximo = new Agenda(date, hora);
             proximo.setTipo(TipoDeCompromissoEnum.fromInteger(tipo));
+            proximo.setIdCompromisso(idCompromisso);
+            if (realizado == 1){
+                proximo.setRealizada(true);
+            }
         }catch (RuntimeException e){
             proximo = null;
         }
@@ -184,29 +221,16 @@ public class AgendaDAO {
         return med;
     }
 
-//    public List<Medicamentos> lista(Paciente p){
-//        List<Medicamentos> medicamentos = new ArrayList<>();
-//        String sql = "SELECT * FROM Medicamento WHERE id_paciente = " + p.getId() + ";";
-//        Cursor c = dao.getReadableDatabase().rawQuery(sql,null);
-//
-//        while (c.moveToNext()){
-//            int id = c.getInt(c.getColumnIndex("id"));
-//            String nome = c.getString(c.getColumnIndex("nome"));
-//            int dose = c.getInt(c.getColumnIndex("dose"));
-//            String unidade = c.getString(c.getColumnIndex("unidade"));
-//            String instrucao = c.getString(c.getColumnIndex("instrucao"));
-//            String frequencia = c.getString(c.getColumnIndex("frequencia"));
-//            Medicamentos m = new Medicamentos(nome, dose, unidade, instrucao, frequencia);
-//            m.setId(id);
-//            p.addMedicamento(m);
-//            medicamentos.add(m);
-//        }
-//        return medicamentos;
-//    }
-//
-//
-//    public void remover(Medicamentos medicamento) {
-//        String[] args = {String.valueOf(medicamento.getId())};
-//        dao.getWritableDatabase().delete("Medicamento", "id = ?", args);
-//    }
+    public void remover(Agenda agenda) {
+        String[] args = {String.valueOf(agenda.getId())};
+        String[] args2 = {String.valueOf(agenda.getIdCompromisso())};
+        if (agenda.getTipo() == TipoDeCompromissoEnum.CONSULTA){
+            dao.getWritableDatabase().delete("Consulta", "id = ?", args2);
+        }else if (agenda.getTipo() == TipoDeCompromissoEnum.EXAME){
+            dao.getWritableDatabase().delete("Exame", "id = ?", args2);
+        }else{
+            dao.getWritableDatabase().delete("Medicamento", "id = ?", args2);
+        }
+        dao.getWritableDatabase().delete("Agenda", "id = ?", args);
+    }
 }

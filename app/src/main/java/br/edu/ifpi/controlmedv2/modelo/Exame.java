@@ -3,7 +3,7 @@ package br.edu.ifpi.controlmedv2.modelo;
 /**
  * Created by Eva on 24/03/2016.
  */
-public class Exame {
+public class Exame extends Agenda{
     private int id;
     private String nome;
     private String motivo;
@@ -14,6 +14,19 @@ public class Exame {
         this.nome = nome;
         this.motivo = motivo;
         this.tipoDeResultado = tipoDeResultado;
+    }
+
+    @Override
+    public String toString() {
+        String str = "";
+        str += "\nExame: " + nome +
+                "\nMotivo: " + motivo +
+                "\nTipo De Resultado: " + tipoDeResultado;
+        return str;
+    }
+
+    public String text2(){
+        return "Nome: " + this.nome;
     }
 
     public String getTipoDeResultado() {

@@ -1,4 +1,4 @@
-package br.edu.ifpi.controlmedv2.Controle;
+package br.edu.ifpi.controlmedv2.modelo;
 
 import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
 import br.edu.ifpi.controlmedv2.modelo.Data;
@@ -21,9 +21,17 @@ public class Agenda {
         this.hora = hora;
     }
 
+    public Agenda(){
+    }
+
     @Override
     public String toString() {
         String str = hora + " - " + tipo.toString();
+        return str;
+    }
+
+    public String text1(){
+        String str = this.data + " - " + this.hora + ": " + this.tipo.toString();
         return str;
     }
 

@@ -3,17 +3,28 @@ package br.edu.ifpi.controlmedv2.modelo;
 /**
  * Created by Eva on 24/03/2016.
  */
-public class Consulta {
+public class Consulta extends Agenda{
     private int id;
     private String especialidade;
     private String hospital;
     private String endereco;
     private String motivo;
-    private Patologia patalogia;
 
     public Consulta(String hospital, String motivo) {
         this.hospital = hospital;
         this.motivo = motivo;
+    }
+
+    @Override
+    public String toString() {
+        String str = "";
+        str += "\nHospital: " + hospital +
+                "\nMotivo: " + motivo;
+        return str;
+    }
+
+    public String text2(){
+        return "Hospital: " + this.hospital;
     }
 
     public int getId() {
@@ -56,11 +67,4 @@ public class Consulta {
         this.motivo = motivo;
     }
 
-    public Patologia getPatalogia() {
-        return patalogia;
-    }
-
-    public void setPatalogia(Patologia patalogia) {
-        this.patalogia = patalogia;
-    }
 }

@@ -3,8 +3,6 @@ package br.edu.ifpi.controlmedv2.modelo;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.edu.ifpi.controlmedv2.Controle.Agenda;
-
 /**
  * Created by aluno on 23/03/16.
  */
@@ -14,6 +12,7 @@ public class Paciente {
     private String nome;
     private boolean principal;
     private List<Agenda> compromissos;
+    private int qtd = 0;
 
 
     public Paciente(String nome) {
@@ -24,6 +23,7 @@ public class Paciente {
 
     public void addCompromisso(Agenda compromisso){
         compromissos.add(compromisso);
+        qtd++;
     }
 
     @Override
@@ -32,6 +32,11 @@ public class Paciente {
         return str;
     }
 
+
+
+    public int getQtd(){
+        return qtd;
+    }
 
     public void setPrincipal(boolean res) {
         this.principal = res;

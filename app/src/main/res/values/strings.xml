@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ControlMedV2</string>
+    <string name="app_name">ControlMed</string>
     <string name="opcao_ok">Ok</string>
     <string name="title_activity_nova_consulta">Adicionar Consulta</string>
 

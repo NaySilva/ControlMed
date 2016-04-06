@@ -10,7 +10,8 @@
         android:orientation="horizontal"
         android:layout_width="match_parent"
         android:layout_margin="@dimen/activity_vertical_margin"
-        android:layout_height="200dp">
+        android:layout_height="match_parent"
+        android:layout_weight="1">
         <LinearLayout
             android:orientation="vertical"
             android:layout_width="match_parent"
@@ -57,49 +58,44 @@
                 android:id="@+id/proximaTipo"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:lines="4"
+                android:text="Tipo"
                 android:textSize="17dp"/>
 
             <Button
+                android:id="@+id/bDetalhes"
+                android:visibility="visible"
                 android:layout_width="match_parent"
                 android:layout_height="30dp"
                 android:background="@android:color/holo_blue_light"
                 android:textColor="#ffffff"
-                android:text="Mais..." />
+                android:text="Detalhes" />
 
         </LinearLayout>
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:gravity="center"
+        android:layout_height="81dp"
+        android:gravity="bottom"
         android:orientation="horizontal"
         android:background="#EEE9E9"
         android:divider="@android:color/darker_gray">
         <ImageView
-            android:id="@+id/opMedicamentos"
-            android:layout_width="80dp"
-            android:layout_height="64dp"
-            android:src="@drawable/opcao_medicamentos"
-            />
-
-        <ImageView
             android:id="@+id/opAgenda"
-            android:layout_width="80dp"
-            android:layout_height="64dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/activity_button"
             android:src="@drawable/opcao_agenda"/>
 
         <ImageView
             android:id="@+id/opHistorico"
-            android:layout_width="80dp"
-            android:layout_height="64dp"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:layout_margin="@dimen/activity_button"
             android:src="@drawable/opcao_historico"/>
-
-        <ImageView
-            android:id="@+id/opAnalise"
-            android:layout_width="80dp"
-            android:layout_height="64dp"
-            android:src="@drawable/opcao_analise"/>
     </LinearLayout>
 
 </LinearLayout>
