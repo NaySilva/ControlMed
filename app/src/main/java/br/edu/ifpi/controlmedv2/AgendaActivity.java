@@ -11,7 +11,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,12 +19,11 @@ import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
 import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
-import br.edu.ifpi.controlmedv2.modelo.Agenda;
+import br.edu.ifpi.controlmedv2.modelo.Compromisso;
 import br.edu.ifpi.controlmedv2.dao.AgendaDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
 import br.edu.ifpi.controlmedv2.modelo.Data;
@@ -33,7 +31,7 @@ import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
 public class AgendaActivity extends AppCompatActivity {
 
-    private Agenda ag;
+    private Compromisso com;
     private PacienteDAO dao = new PacienteDAO(this);
     AgendaDAO daoA = new AgendaDAO(dao);
     private Paciente principal;
@@ -84,7 +82,7 @@ public class AgendaActivity extends AppCompatActivity {
         listCompromissos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ag = (Agenda) parent.getItemAtPosition(position);
+                com = (Compromisso) parent.getItemAtPosition(position);
                 return false;
             }
         });
@@ -92,9 +90,9 @@ public class AgendaActivity extends AppCompatActivity {
     }
 
     private void recarregarDados() {
-        final List<Agenda> compromissos = daoA.lista(principal, dataButton.getText().toString());
+        final List<Compromisso> compromissos = daoA.lista(principal, dataButton.getText().toString());
         if (compromissos != null) {
-            ArrayAdapter<Agenda> adapter = new ArrayAdapter<Agenda>(this, android.R.layout.simple_list_item_checked, compromissos);
+            ArrayAdapter<Compromisso> adapter = new ArrayAdapter<Compromisso>(this, android.R.layout.simple_list_item_checked, compromissos);
 //
 
             listCompromissos.setAdapter(adapter);
@@ -111,7 +109,7 @@ public class AgendaActivity extends AppCompatActivity {
             listCompromissos.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    Agenda escolhida = (Agenda) listCompromissos.getItemAtPosition(position);
+                    Compromisso escolhida = (Compromisso) listCompromissos.getItemAtPosition(position);
                     listCompromissos.setItemChecked(position, listCompromissos.isItemChecked(position));
                     daoA.mudarRealizado(escolhida);
 
@@ -170,12 +168,12 @@ public class AgendaActivity extends AppCompatActivity {
                 public boolean onMenuItemClick(MenuItem item) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(AgendaActivity.this);
                     String str;
-                    if(ag.getTipo() == TipoDeCompromissoEnum.CONSULTA) {
-                        str = daoA.buscarConsulta(ag.getIdCompromisso()).toString();
-                    }else if (ag.getTipo() == TipoDeCompromissoEnum.EXAME){
-                        str = daoA.buscarExame(ag.getIdCompromisso()).toString();
+                    if(com.getTipo() == TipoDeCompromissoEnum.CONSULTA) {
+                        str = daoA.buscarConsulta(com.getIdCompromisso()).toString();
+                    }else if (com.getTipo() == TipoDeCompromissoEnum.EXAME){
+                        str = daoA.buscarExame(com.getIdCompromisso()).toString();
                     }else{
-                        str = daoA.buscarMedicamentos(ag.getIdCompromisso()).toString();
+                        str = daoA.buscarMedicamentos(com.getIdCompromisso()).toString();
                     }
                     builder.setMessage(str);
                     builder.setPositiveButton("Voltar!", new DialogInterface.OnClickListener() {
@@ -200,7 +198,7 @@ public class AgendaActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PacienteDAO dao = new PacienteDAO(AgendaActivity.this);
-                            daoA.remover(ag);
+                            daoA.remover(com);
                             Toast.makeText(AgendaActivity.this, "Compromisso removido", Toast.LENGTH_SHORT).show();
                             onResume();
                         }

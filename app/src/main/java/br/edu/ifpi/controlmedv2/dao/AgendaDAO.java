@@ -6,7 +6,7 @@ import android.database.Cursor;
 import java.util.ArrayList;
 import java.util.List;
 
-import br.edu.ifpi.controlmedv2.modelo.Agenda;
+import br.edu.ifpi.controlmedv2.modelo.Compromisso;
 import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
 import br.edu.ifpi.controlmedv2.modelo.Consulta;
 import br.edu.ifpi.controlmedv2.modelo.Data;
@@ -16,7 +16,7 @@ import br.edu.ifpi.controlmedv2.modelo.Medicamentos;
 import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
 /**
- * Created by Eva on 31/03/2016.
+ * Created by Nayara on 31/03/2016.
  */
 public class AgendaDAO {
     private PacienteDAO dao;
@@ -25,7 +25,7 @@ public class AgendaDAO {
         this.dao = dao;
     }
 
-    public void inserirConsulta(Agenda agenda, Paciente paciente, Consulta consulta){
+    public void inserirConsulta(Compromisso compromisso, Paciente paciente, Consulta consulta){
         ContentValues cv1 = new ContentValues();
         cv1.put("hospital", consulta.getHospital());
         cv1.put("motivo", consulta.getMotivo());
@@ -39,8 +39,8 @@ public class AgendaDAO {
 
         ContentValues cv = new ContentValues();
         cv.put("tipo", 1);
-        cv.put("data", agenda.getData().toString());
-        cv.put("horario", agenda.getHora().toString());
+        cv.put("data", compromisso.getData().toString());
+        cv.put("horario", compromisso.getHora().toString());
         cv.put("realizado", 0);
         cv.put("id_paciente", paciente.getId());
         cv.put("id_compromisso", id);
@@ -48,12 +48,12 @@ public class AgendaDAO {
 
         dao.getWritableDatabase().insert("Agenda", null, cv);
 
-        agenda.setTipo(TipoDeCompromissoEnum.fromInteger(1));
-        paciente.addCompromisso(agenda);
+        compromisso.setTipo(TipoDeCompromissoEnum.fromInteger(1));
+        paciente.addCompromisso(compromisso);
 
     }
 
-    public void inserirExame(Agenda agenda, Paciente paciente, Exame exame){
+    public void inserirExame(Compromisso compromisso, Paciente paciente, Exame exame){
         ContentValues cv1 = new ContentValues();
         cv1.put("nome", exame.getNome());
         cv1.put("motivo", exame.getMotivo());
@@ -68,20 +68,20 @@ public class AgendaDAO {
 
         ContentValues cv = new ContentValues();
         cv.put("tipo", 2);
-        cv.put("data", agenda.getData().toString());
-        cv.put("horario", agenda.getHora().toString());
+        cv.put("data", compromisso.getData().toString());
+        cv.put("horario", compromisso.getHora().toString());
         cv.put("realizado", 0);
         cv.put("id_paciente", paciente.getId());
         cv.put("id_compromisso", id);
 
         dao.getWritableDatabase().insert("Agenda", null, cv);
 
-        agenda.setTipo(TipoDeCompromissoEnum.fromInteger(2));
-        paciente.addCompromisso(agenda);
+        compromisso.setTipo(TipoDeCompromissoEnum.fromInteger(2));
+        paciente.addCompromisso(compromisso);
 
     }
 
-    public void inserirMedicamentos(Agenda agenda, Paciente paciente, Medicamentos medicamento){
+    public void inserirMedicamentos(Compromisso compromisso, Paciente paciente, Medicamentos medicamento){
         ContentValues cv1 = new ContentValues();
         cv1.put("nome", medicamento.getNome());
         cv1.put("dose", medicamento.getDose());
@@ -98,21 +98,21 @@ public class AgendaDAO {
 
         ContentValues cv = new ContentValues();
         cv.put("tipo", 3);
-        cv.put("data", agenda.getData().toString());
-        cv.put("horario", agenda.getHora().toString());
+        cv.put("data", compromisso.getData().toString());
+        cv.put("horario", compromisso.getHora().toString());
         cv.put("realizado", 0);
         cv.put("id_paciente", paciente.getId());
         cv.put("id_compromisso", id);
 
         dao.getWritableDatabase().insert("Agenda", null, cv);
 
-        agenda.setTipo(TipoDeCompromissoEnum.fromInteger(3));
-        paciente.addCompromisso(agenda);
+        compromisso.setTipo(TipoDeCompromissoEnum.fromInteger(3));
+        paciente.addCompromisso(compromisso);
 
     }
 
-    public List<Agenda> lista(Paciente p, String data){
-        List<Agenda> compromissos = new ArrayList<>();
+    public List<Compromisso> lista(Paciente p, String data){
+        List<Compromisso> compromissos = new ArrayList<>();
         String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " AND data = '"+ data + "' ORDER BY horario ASC;";
         Cursor c = dao.getReadableDatabase().rawQuery(sql,null);
 
@@ -123,47 +123,47 @@ public class AgendaDAO {
             String date = c.getString(c.getColumnIndex("data"));
             int id_compromisso = c.getInt(c.getColumnIndex("id_compromisso"));
             int realizado = c.getInt(c.getColumnIndex("realizado"));
-            Agenda ag = new Agenda(date, hora);
-            ag.setTipo(TipoDeCompromissoEnum.fromInteger(tipo));
-            ag.setId(id);
-            ag.setIdCompromisso(id_compromisso);
+            Compromisso com = new Compromisso(date, hora);
+            com.setTipo(TipoDeCompromissoEnum.fromInteger(tipo));
+            com.setId(id);
+            com.setIdCompromisso(id_compromisso);
             if(realizado == 1){
-                ag.setRealizada(true);
+                com.setRealizada(true);
             }
-            compromissos.add(ag);
-            p.addCompromisso(ag);
+            compromissos.add(com);
+            p.addCompromisso(com);
         }
         return compromissos;
     }
 
-    public List<Agenda> historico(Paciente p){
-        List<Agenda> todosCompromissos = new ArrayList<>();
+    public List<Compromisso> historico(Paciente p){
+        List<Compromisso> todosCompromissos = new ArrayList<>();
         String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " ORDER BY data ASC;";
         Cursor c = dao.getReadableDatabase().rawQuery(sql,null);
         while (c.moveToNext()){
             String date = c.getString(c.getColumnIndex("data"));
-            List<Agenda> compromissos =  lista(p, date);
-            for (Agenda item: compromissos){
+            List<Compromisso> compromissos =  lista(p, date);
+            for (Compromisso item: compromissos){
                 todosCompromissos.add(item);
             }
         }
         return todosCompromissos;
     }
 
-    public void mudarRealizado(Agenda agenda){
-        agenda.setRealizada(!agenda.isRealizada());
+    public void mudarRealizado(Compromisso compromisso){
+        compromisso.setRealizada(!compromisso.isRealizada());
         String sql;
-        if (agenda.isRealizada()){
-            sql = "UPDATE Agenda SET realizado = 1 WHERE id = " + agenda.getId() + ";";
+        if (compromisso.isRealizada()){
+            sql = "UPDATE Agenda SET realizado = 1 WHERE id = " + compromisso.getId() + ";";
         }else{
-            sql = "UPDATE Agenda SET realizado = 0 WHERE id = " + agenda.getId() + ";";
+            sql = "UPDATE Agenda SET realizado = 0 WHERE id = " + compromisso.getId() + ";";
         }
         dao.getWritableDatabase().execSQL(sql);
 
     }
-    public Agenda proximoDeHoje(Paciente p, Data data, Horario h){
-        Agenda proximo;
-        String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " AND data = '"+ data.toString() + "' AND horario > '" + h.toString() + "' AND realizado = 0 ORDER BY horario ASC;";
+    public Compromisso proximoDeHoje(Paciente p, Data data, Horario h){
+        Compromisso proximo;
+        String sql = "SELECT * FROM Agenda WHERE id_paciente = " + p.getId() + " AND data = '"+ data.toString() + "' AND horario >= '" + h.toString() + "' AND realizado = 0 ORDER BY horario ASC;";
         Cursor c = dao.getReadableDatabase().rawQuery(sql,null);
         try{
             c.moveToFirst();
@@ -172,7 +172,7 @@ public class AgendaDAO {
             String date = c.getString(c.getColumnIndex("data"));
             int idCompromisso = c.getInt(c.getColumnIndex("id_compromisso"));
             int realizado = c.getInt(c.getColumnIndex("realizado"));
-            proximo = new Agenda(date, hora);
+            proximo = new Compromisso(date, hora);
             proximo.setTipo(TipoDeCompromissoEnum.fromInteger(tipo));
             proximo.setIdCompromisso(idCompromisso);
             if (realizado == 1){
@@ -221,12 +221,12 @@ public class AgendaDAO {
         return med;
     }
 
-    public void remover(Agenda agenda) {
-        String[] args = {String.valueOf(agenda.getId())};
-        String[] args2 = {String.valueOf(agenda.getIdCompromisso())};
-        if (agenda.getTipo() == TipoDeCompromissoEnum.CONSULTA){
+    public void remover(Compromisso compromisso) {
+        String[] args = {String.valueOf(compromisso.getId())};
+        String[] args2 = {String.valueOf(compromisso.getIdCompromisso())};
+        if (compromisso.getTipo() == TipoDeCompromissoEnum.CONSULTA){
             dao.getWritableDatabase().delete("Consulta", "id = ?", args2);
-        }else if (agenda.getTipo() == TipoDeCompromissoEnum.EXAME){
+        }else if (compromisso.getTipo() == TipoDeCompromissoEnum.EXAME){
             dao.getWritableDatabase().delete("Exame", "id = ?", args2);
         }else{
             dao.getWritableDatabase().delete("Medicamento", "id = ?", args2);

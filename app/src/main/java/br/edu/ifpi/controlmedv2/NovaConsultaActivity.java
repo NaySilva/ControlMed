@@ -1,53 +1,30 @@
 package br.edu.ifpi.controlmedv2;
 
-import android.animation.Animator;
-import android.animation.AnimatorListenerAdapter;
-import android.annotation.TargetApi;
 import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
-import android.content.pm.PackageManager;
-import android.support.annotation.NonNull;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
-import android.app.LoaderManager.LoaderCallbacks;
 
-import android.content.CursorLoader;
-import android.content.Loader;
-import android.database.Cursor;
-import android.net.Uri;
-import android.os.AsyncTask;
-
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
 
-import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
 
-import br.edu.ifpi.controlmedv2.modelo.Agenda;
 import br.edu.ifpi.controlmedv2.dao.AgendaDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
+import br.edu.ifpi.controlmedv2.modelo.Compromisso;
 import br.edu.ifpi.controlmedv2.modelo.Consulta;
 import br.edu.ifpi.controlmedv2.modelo.Data;
 import br.edu.ifpi.controlmedv2.modelo.Horario;
 import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
-import static android.Manifest.permission.READ_CONTACTS;
-
-/**
- * A login screen that offers login via email/password.
- */
 public class NovaConsultaActivity extends AppCompatActivity  {
 
 
@@ -132,12 +109,12 @@ public class NovaConsultaActivity extends AppCompatActivity  {
         String data = dataButton.getText().toString();
         String hora = horaButton.getText().toString();
 
-        Agenda agenda = new Agenda(data, hora);
+        Compromisso compromisso = new Compromisso(data, hora);
 
-        daoA.inserirConsulta(agenda, principal, consulta);
+        daoA.inserirConsulta(compromisso, principal, consulta);
 
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Medicamento adicionado ;)");
+        builder.setMessage("Consulta adicionada");
         builder.setPositiveButton("Ok obg!", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {

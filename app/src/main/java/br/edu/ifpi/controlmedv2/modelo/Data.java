@@ -3,7 +3,7 @@ package br.edu.ifpi.controlmedv2.modelo;
 import java.util.Calendar;
 
 /**
- * Created by Eva on 24/03/2016.
+ * Created by Nayara on 24/03/2016.
  */
 public class Data {
 

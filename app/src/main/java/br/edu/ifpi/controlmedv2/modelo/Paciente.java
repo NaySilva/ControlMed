@@ -4,14 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by aluno on 23/03/16.
+ * Created by Nayara on 23/03/16.
  */
 public class Paciente {
 
     private int id;
     private String nome;
     private boolean principal;
-    private List<Agenda> compromissos;
+    private List<Compromisso> compromissos;
     private int qtd = 0;
 
 
@@ -21,7 +21,7 @@ public class Paciente {
         compromissos = new ArrayList<>();
     }
 
-    public void addCompromisso(Agenda compromisso){
+    public void addCompromisso(Compromisso compromisso){
         compromissos.add(compromisso);
         qtd++;
     }
@@ -54,7 +54,7 @@ public class Paciente {
         return id;
     }
 
-    public List<Agenda> getCompromissos() {
+    public List<Compromisso> getCompromissos() {
         return compromissos;
     }
 }

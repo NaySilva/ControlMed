@@ -2,8 +2,6 @@ package br.edu.ifpi.controlmedv2;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -14,9 +12,7 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
-import android.widget.CheckedTextView;
 import android.widget.EditText;
-import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -45,12 +41,7 @@ public class ListPacienteActivity extends AppCompatActivity {
                 return false;
             }
         });
-//        listPacients.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-//            @Override
-//            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-//                p = (Paciente) parent.getItemAtPosition(position);
-//            }
-//        });
+
         Button button = (Button) findViewById(R.id.bNovoPaciente);
         registerForContextMenu(button);
         button.setOnClickListener(new View.OnClickListener() {

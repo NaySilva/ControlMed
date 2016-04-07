@@ -2,7 +2,6 @@ package br.edu.ifpi.controlmedv2;
 
 import android.app.AlertDialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -11,7 +10,6 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
@@ -19,12 +17,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.List;
-import java.util.Locale;
 
 import br.edu.ifpi.controlmedv2.dao.AgendaDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
 import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
-import br.edu.ifpi.controlmedv2.modelo.Agenda;
+import br.edu.ifpi.controlmedv2.modelo.Compromisso;
 import br.edu.ifpi.controlmedv2.modelo.Consulta;
 import br.edu.ifpi.controlmedv2.modelo.Exame;
 import br.edu.ifpi.controlmedv2.modelo.Medicamentos;
@@ -32,12 +29,12 @@ import br.edu.ifpi.controlmedv2.modelo.Paciente;
 
 public class HistoricoActivity extends AppCompatActivity {
 
-    private Agenda ag;
+    private Compromisso com;
     private PacienteDAO dao = new PacienteDAO(this);
     private AgendaDAO daoA = new AgendaDAO(dao);
     private Paciente principal;
     private ListView listTodosCompromissos;
-    private List<Agenda> todosCompromissos;
+    private List<Compromisso> todosCompromissos;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,7 +46,7 @@ public class HistoricoActivity extends AppCompatActivity {
         listTodosCompromissos.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                ag = (Agenda) parent.getItemAtPosition(position);
+                com = (Compromisso) parent.getItemAtPosition(position);
                 return false;
             }
         });
@@ -69,7 +66,7 @@ public class HistoricoActivity extends AppCompatActivity {
     private void recarregarDados(){
         todosCompromissos = daoA.historico(principal);
         if (todosCompromissos != null) {
-            ArrayAdapter<Agenda> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1, todosCompromissos) {
+            ArrayAdapter<Compromisso> adapter = new ArrayAdapter(this, android.R.layout.simple_list_item_2, android.R.id.text1, todosCompromissos) {
                 @Override
                 public View getView(int position, View convertView, ViewGroup parent) {
 
@@ -78,7 +75,7 @@ public class HistoricoActivity extends AppCompatActivity {
                     TextView text1 = (TextView) view.findViewById(android.R.id.text1);
                     TextView text2 = (TextView) view.findViewById(android.R.id.text2);
 
-                    Agenda a = todosCompromissos.get(position);
+                    Compromisso a = todosCompromissos.get(position);
 
                     text1.setTextSize(20);
                     text2.setTextSize(16);
@@ -126,8 +123,8 @@ public class HistoricoActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.limpar) {
-            for (Agenda ag : todosCompromissos) {
-                daoA.remover(ag);
+            for (Compromisso com : todosCompromissos) {
+                daoA.remover(com);
             }
             Toast.makeText(this, "Historico Limpo", Toast.LENGTH_LONG).show();
             onResume();
@@ -148,12 +145,12 @@ public class HistoricoActivity extends AppCompatActivity {
                 public boolean onMenuItemClick(MenuItem item) {
                     AlertDialog.Builder builder = new AlertDialog.Builder(HistoricoActivity.this);
                     String str;
-                    if(ag.getTipo() == TipoDeCompromissoEnum.CONSULTA) {
-                        str = daoA.buscarConsulta(ag.getIdCompromisso()).toString();
-                    }else if (ag.getTipo() == TipoDeCompromissoEnum.EXAME){
-                        str = daoA.buscarExame(ag.getIdCompromisso()).toString();
+                    if(com.getTipo() == TipoDeCompromissoEnum.CONSULTA) {
+                        str = daoA.buscarConsulta(com.getIdCompromisso()).toString();
+                    }else if (com.getTipo() == TipoDeCompromissoEnum.EXAME){
+                        str = daoA.buscarExame(com.getIdCompromisso()).toString();
                     }else{
-                        str = daoA.buscarMedicamentos(ag.getIdCompromisso()).toString();
+                        str = daoA.buscarMedicamentos(com.getIdCompromisso()).toString();
                     }
                     builder.setMessage(str);
                     builder.setPositiveButton("Voltar!", new DialogInterface.OnClickListener() {
@@ -178,7 +175,7 @@ public class HistoricoActivity extends AppCompatActivity {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             PacienteDAO dao = new PacienteDAO(HistoricoActivity.this);
-                            daoA.remover(ag);
+                            daoA.remover(com);
                             Toast.makeText(HistoricoActivity.this, "Compromisso removido", Toast.LENGTH_SHORT).show();
                             onResume();
                         }

@@ -17,9 +17,9 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
-import br.edu.ifpi.controlmedv2.modelo.Agenda;
 import br.edu.ifpi.controlmedv2.dao.AgendaDAO;
 import br.edu.ifpi.controlmedv2.dao.PacienteDAO;
+import br.edu.ifpi.controlmedv2.modelo.Compromisso;
 import br.edu.ifpi.controlmedv2.modelo.Data;
 import br.edu.ifpi.controlmedv2.modelo.Horario;
 import br.edu.ifpi.controlmedv2.modelo.Paciente;
@@ -58,7 +58,7 @@ public class HomeActivity extends AppCompatActivity {
             Horario h = new Horario();
             h.horaAtual();
             final AgendaDAO daoA = new AgendaDAO(dao);
-            final Agenda compromisso = daoA.proximoDeHoje(p, d, h);
+            final Compromisso compromisso = daoA.proximoDeHoje(p, d, h);
             detalhes.setVisibility(View.VISIBLE);
             textHora.setText(compromisso.getHora());
             textTipo.setText(compromisso.getTipo().toString());
@@ -105,7 +105,7 @@ public class HomeActivity extends AppCompatActivity {
 
     }
 
-    private void clickDetalhes(Agenda ag, AgendaDAO daoA){
+    private void clickDetalhes(Compromisso ag, AgendaDAO daoA){
         AlertDialog.Builder builder = new AlertDialog.Builder(HomeActivity.this);
         String str;
         if(ag.getTipo() == TipoDeCompromissoEnum.CONSULTA) {

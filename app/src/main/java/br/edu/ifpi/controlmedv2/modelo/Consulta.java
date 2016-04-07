@@ -1,9 +1,9 @@
 package br.edu.ifpi.controlmedv2.modelo;
 
 /**
- * Created by Eva on 24/03/2016.
+ * Created by Nayara on 24/03/2016.
  */
-public class Consulta extends Agenda{
+public class Consulta extends Compromisso{
     private int id;
     private String especialidade;
     private String hospital;

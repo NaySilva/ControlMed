@@ -1,13 +1,11 @@
 package br.edu.ifpi.controlmedv2.modelo;
 
 import br.edu.ifpi.controlmedv2.enums.TipoDeCompromissoEnum;
-import br.edu.ifpi.controlmedv2.modelo.Data;
-import br.edu.ifpi.controlmedv2.modelo.Horario;
 
 /**
  * Created by Eva on 24/03/2016.
  */
-public class Agenda {
+public class Compromisso {
     private int id;
     private TipoDeCompromissoEnum tipo;
     private String data;
@@ -15,13 +13,13 @@ public class Agenda {
     private boolean realizada;
     private int idCompromisso;
 
-    public Agenda(String data, String hora){
+    public Compromisso(String data, String hora){
         this.realizada = false;
         this.data = data;
         this.hora = hora;
     }
 
-    public Agenda(){
+    public Compromisso(){
     }
 
     @Override

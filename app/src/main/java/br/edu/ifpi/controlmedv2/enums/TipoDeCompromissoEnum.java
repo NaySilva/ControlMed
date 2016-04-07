@@ -1,7 +1,7 @@
 package br.edu.ifpi.controlmedv2.enums;
 
 /**
- * Created by Eva on 24/03/2016.
+ * Created by Nayara on 24/03/2016.
  */
 public enum TipoDeCompromissoEnum {
     CONSULTA(1), EXAME(2), MEDICAMENTO(3);

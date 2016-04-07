@@ -1,9 +1,9 @@
 package br.edu.ifpi.controlmedv2.modelo;
 
 /**
- * Created by Eva on 24/03/2016.
+ * Created by Nayara on 24/03/2016.
  */
-public class Medicamentos extends Agenda{
+public class Medicamentos extends Compromisso{
 
     private int id;
     private String nome;
